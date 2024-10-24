@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-deployment
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+        - name: backend
+          image: aksaz01devvvd01registry.azurecr.io/sstptkdss1/edu241024:main
+          imagePullPolicy: Always
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: "dev"
+          ports:
+            - containerPort: 8080
+          volumeMounts:
+            - mountPath: /var/log/edu  # Pod 내에서 사용할 경로
+              name: hostpath-volume  # 볼륨 이름
+      volumes:
+        - name: hostpath-volume
+          hostPath:
+            path: /logs/worldkim/  # 호스트 노드의 경로
+            type: DirectoryOrCreate
